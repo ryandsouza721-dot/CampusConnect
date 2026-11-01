@@ -6,15 +6,15 @@ import '../models/user_profile_model.dart';
 
 class MockData {
   static UserProfile get initialProfile => UserProfile(
-        id: 'user_darvin_1',
-        name: 'Darvin',
-        email: 'darvin@fcrit.ac.in',
-        department: 'CSE',
-        yearOfStudy: '2nd',
-        division: 'Div B',
-        rollNumber: '42',
-        clubs: ['Coding'],
-        avatarInitials: 'FC',
+        id: 'campus_user',
+        name: 'Campus student',
+        email: 'student@fcrit.ac.in',
+        department: 'Not set',
+        yearOfStudy: 'Not set',
+        division: '—',
+        rollNumber: '—',
+        clubs: [],
+        avatarInitials: 'CS',
         isProfileComplete: true,
       );
 

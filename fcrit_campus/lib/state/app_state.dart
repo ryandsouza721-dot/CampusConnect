@@ -5,6 +5,22 @@ import '../models/message_model.dart';
 import '../models/user_profile_model.dart';
 import '../services/mock_data.dart';
 
+class CampusTask {
+  final String id;
+  final String title;
+  final DateTime dueDate;
+  final bool isComplete;
+
+  const CampusTask({required this.id, required this.title, required this.dueDate, this.isComplete = false});
+
+  CampusTask copyWith({bool? isComplete}) => CampusTask(
+        id: id,
+        title: title,
+        dueDate: dueDate,
+        isComplete: isComplete ?? this.isComplete,
+      );
+}
+
 class AppState extends ChangeNotifier {
   // Navigation: 0 = Home, 1 = Events, 2 = Inbox/You, 3 = Profile
   // (Notice: "Notices" has been safely removed from bottom/sidebar primary tabs)
@@ -13,6 +29,37 @@ class AppState extends ChangeNotifier {
 
   UserProfile _userProfile = MockData.initialProfile;
   UserProfile get userProfile => _userProfile;
+
+  void setAuthenticatedUser({
+    required String name,
+    required String email,
+    String? id,
+    String? department,
+    String? yearOfStudy,
+    String? division,
+    String? rollNumber,
+    List<String>? clubs,
+  }) {
+    final initials = name
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((part) => part.isNotEmpty)
+        .take(2)
+        .map((part) => part[0].toUpperCase())
+        .join();
+    _userProfile = _userProfile.copyWith(
+      id: id ?? _userProfile.id,
+      name: name.trim(),
+      email: email.trim(),
+      avatarInitials: initials.isEmpty ? 'CC' : initials,
+      department: department ?? 'Not set',
+      yearOfStudy: yearOfStudy ?? 'Not set',
+      division: division ?? '—',
+      rollNumber: rollNumber ?? '—',
+      clubs: clubs ?? const [],
+    );
+    notifyListeners();
+  }
 
   final Notice _importantNotice = MockData.importantNotice;
   Notice get importantNotice => _importantNotice;
@@ -27,6 +74,27 @@ class AppState extends ChangeNotifier {
   // Events state
   final List<EventItem> _events = MockData.initialEvents;
   List<EventItem> get events => _events;
+
+  final List<CampusTask> _tasks = [];
+  List<CampusTask> get tasks => List.unmodifiable(_tasks);
+
+  void addTask(String title, DateTime dueDate) {
+    _tasks.add(CampusTask(id: DateTime.now().microsecondsSinceEpoch.toString(), title: title.trim(), dueDate: dueDate));
+    _tasks.sort((a, b) => a.dueDate.compareTo(b.dueDate));
+    notifyListeners();
+  }
+
+  void toggleTask(String taskId) {
+    final index = _tasks.indexWhere((task) => task.id == taskId);
+    if (index == -1) return;
+    _tasks[index] = _tasks[index].copyWith(isComplete: !_tasks[index].isComplete);
+    notifyListeners();
+  }
+
+  void removeTask(String taskId) {
+    _tasks.removeWhere((task) => task.id == taskId);
+    notifyListeners();
+  }
 
   EventStatus _selectedEventStatus = EventStatus.upcoming;
   EventStatus get selectedEventStatus => _selectedEventStatus;
@@ -75,6 +143,15 @@ class AppState extends ChangeNotifier {
       name: name,
       division: division,
       rollNumber: rollNumber,
+      avatarInitials: name == null
+          ? null
+          : name
+              .trim()
+              .split(RegExp(r'\s+'))
+              .where((part) => part.isNotEmpty)
+              .take(2)
+              .map((part) => part[0].toUpperCase())
+              .join(),
       isProfileComplete: true,
     );
     notifyListeners();

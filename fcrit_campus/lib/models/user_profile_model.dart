@@ -52,14 +52,14 @@ class UserProfile {
   factory UserProfile.defaultUser() {
     return UserProfile(
       id: 'usr_001',
-      name: 'Darvin',
-      email: 'darvin.student@fcrit.ac.in',
-      department: 'CSE',
-      yearOfStudy: '2nd',
-      division: 'Div B',
-      rollNumber: '42',
-      clubs: ['Coding'],
-      avatarInitials: 'FC',
+      name: 'Campus student',
+      email: 'student@fcrit.ac.in',
+      department: 'Not set',
+      yearOfStudy: 'Not set',
+      division: '—',
+      rollNumber: '—',
+      clubs: [],
+      avatarInitials: 'CS',
       isProfileComplete: true,
     );
   }

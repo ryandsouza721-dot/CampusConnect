@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../state/app_state.dart';
 import '../theme/app_colors.dart';
 
@@ -9,250 +10,101 @@ class DesktopSidebar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
-
     return Container(
-      width: 260,
+      width: 248,
       decoration: const BoxDecoration(
-        color: AppColors.navyHeader,
-        border: Border(
-          right: BorderSide(color: AppColors.navyBorder, width: 1),
-        ),
+        color: Colors.white,
+        border: Border(right: BorderSide(color: AppColors.borderLight)),
       ),
       child: Column(
         children: [
-          // Brand Header
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 28, 20, 24),
+            padding: const EdgeInsets.fromLTRB(20, 26, 18, 24),
             child: Row(
               children: [
-                // FC Avatar
                 Container(
                   width: 42,
                   height: 42,
-                  decoration: const BoxDecoration(
-                    gradient: AppColors.purpleGradient,
-                    shape: BoxShape.circle,
+                  decoration: BoxDecoration(
+                    color: AppColors.purpleLight,
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Center(
-                    child: Text(
-                      'FC',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
+                    child: Text('F', style: TextStyle(color: AppColors.primaryPurple, fontSize: 20, fontWeight: FontWeight.w800)),
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'FCRIT Campus',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                      Text(
-                        'Student Portal',
-                        style: TextStyle(
-                          color: AppColors.textLightSecondary,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('FCRIT Campus', style: TextStyle(color: AppColors.textPrimary, fontSize: 15, fontWeight: FontWeight.w700)),
+                    SizedBox(height: 3),
+                    Text('Student Portal', style: TextStyle(color: AppColors.textSecondary, fontSize: 11, fontWeight: FontWeight.w500)),
+                  ],
                 ),
               ],
             ),
           ),
-
-          const Divider(color: AppColors.navyBorder, height: 1),
-          const SizedBox(height: 16),
-
-          // Primary Navigation Items
-          // (CRITICAL: Notice tab is excluded, keeping Home, Events, Messages/You, Profile)
+          const Divider(color: AppColors.borderLight, height: 1),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
+            padding: const EdgeInsets.fromLTRB(14, 22, 14, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Padding(
-                  padding: EdgeInsets.only(left: 12, bottom: 8),
-                  child: Text(
-                    'MAIN MENU',
-                    style: TextStyle(
-                      color: Color(0xFF64748B),
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1.0,
-                    ),
-                  ),
+                  padding: EdgeInsets.only(left: 12, bottom: 9),
+                  child: Text('CAMPUS', style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 1.1)),
                 ),
-                _buildNavItem(
-                  context,
-                  index: 0,
-                  icon: Icons.home_rounded,
-                  label: 'Home',
-                  isSelected: state.currentNavIndex == 0,
-                ),
-                const SizedBox(height: 4),
-                _buildNavItem(
-                  context,
-                  index: 1,
-                  icon: Icons.calendar_month_rounded,
-                  label: 'Events',
-                  isSelected: state.currentNavIndex == 1,
-                ),
-                const SizedBox(height: 4),
-                _buildNavItem(
-                  context,
-                  index: 2,
-                  icon: Icons.chat_bubble_outline_rounded,
-                  label: 'Messages',
-                  badgeCount: state.unreadMessagesCount,
-                  isSelected: state.currentNavIndex == 2,
-                ),
-                const SizedBox(height: 4),
-                _buildNavItem(
-                  context,
-                  index: 3,
-                  icon: Icons.person_outline_rounded,
-                  label: 'Profile',
-                  isSelected: state.currentNavIndex == 3,
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // Quick Filter Shortcuts
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+                _navItem(context, state, 0, Icons.home_outlined, 'Home'),
+                _navItem(context, state, 1, Icons.calendar_month_outlined, 'Events'),
+                _navItem(context, state, 2, Icons.chat_bubble_outline_rounded, 'Messages', badge: state.unreadMessagesCount),
                 const Padding(
-                  padding: EdgeInsets.only(left: 12, bottom: 8),
-                  child: Text(
-                    'QUICK CHANNELS',
-                    style: TextStyle(
-                      color: Color(0xFF64748B),
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1.0,
-                    ),
-                  ),
+                  padding: EdgeInsets.fromLTRB(12, 18, 12, 8),
+                  child: Text('QUICK ACCESS', style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 1.1)),
                 ),
-                _buildChannelItem(
-                  icon: Icons.notifications_none_rounded,
-                  label: 'Latest Notices',
-                  color: AppColors.primaryPurple,
-                  onTap: () {
-                    state.setNavIndex(0);
-                    state.setNoticeFilter('Notices');
-                  },
+                _quickItem(context, state, Icons.notifications_none_rounded, 'Notices', 'Notices'),
+                _quickItem(context, state, Icons.business_center_outlined, 'Placements', 'Placements'),
+                _quickItem(context, state, Icons.groups_outlined, 'Clubs', 'Clubs'),
+                _quickItem(context, state, Icons.event_outlined, 'Events', 'Events'),
+                _quickItem(context, state, Icons.menu_book_outlined, 'Academics', 'Academics'),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(12, 18, 12, 8),
+                  child: Text('ACCOUNT', style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 1.1)),
                 ),
-                _buildChannelItem(
-                  icon: Icons.business_center_outlined,
-                  label: 'Placements Drive',
-                  color: AppColors.placements,
-                  onTap: () {
-                    state.setNavIndex(0);
-                    state.setNoticeFilter('Placements');
-                  },
-                ),
-                _buildChannelItem(
-                  icon: Icons.music_note_outlined,
-                  label: 'Clubs & Cultural',
-                  color: AppColors.clubs,
-                  onTap: () {
-                    state.setNavIndex(0);
-                    state.setNoticeFilter('Clubs');
-                  },
-                ),
-                _buildChannelItem(
-                  icon: Icons.menu_book_rounded,
-                  label: 'Academics Portal',
-                  color: AppColors.cultural,
-                  onTap: () {
-                    state.setNavIndex(0);
-                    state.setNoticeFilter('Academics');
-                  },
-                ),
+                _navItem(context, state, 3, Icons.person_outline_rounded, 'Profile'),
               ],
             ),
           ),
-
           const Spacer(),
-
-          // User info footer card
           Container(
             margin: const EdgeInsets.all(14),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.navySurface,
+              color: AppColors.backgroundLight,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.navyBorder),
+              border: Border.all(color: AppColors.borderLight),
             ),
             child: Row(
               children: [
                 CircleAvatar(
                   radius: 18,
-                  backgroundColor: AppColors.primaryPurple,
-                  child: Text(
-                    state.userProfile.name.isNotEmpty
-                        ? state.userProfile.name[0].toUpperCase()
-                        : 'D',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
+                  backgroundColor: AppColors.purpleLight,
+                  child: Text(state.userProfile.avatarInitials, style: const TextStyle(color: AppColors.primaryPurple, fontWeight: FontWeight.w700, fontSize: 13)),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        state.userProfile.name,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        '${state.userProfile.department} • ${state.userProfile.yearOfStudy} Year',
-                        style: const TextStyle(
-                          color: AppColors.textLightSecondary,
-                          fontSize: 11,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      Text(state.userProfile.name, style: const TextStyle(color: AppColors.textPrimary, fontSize: 12, fontWeight: FontWeight.w700), overflow: TextOverflow.ellipsis),
+                      Text('${state.userProfile.department} · ${state.userProfile.yearOfStudy} year', style: const TextStyle(color: AppColors.textSecondary, fontSize: 10), overflow: TextOverflow.ellipsis),
                     ],
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(
-                    Icons.settings_outlined,
-                    color: AppColors.textLightSecondary,
-                    size: 18,
-                  ),
                   onPressed: () => state.setNavIndex(3),
-                  tooltip: 'Profile Settings',
+                  tooltip: 'Edit profile',
+                  icon: const Icon(Icons.settings_outlined, color: AppColors.textSecondary, size: 18),
                 ),
               ],
             ),
@@ -262,108 +114,58 @@ class DesktopSidebar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(
-    BuildContext context, {
-    required int index,
-    required IconData icon,
-    required String label,
-    required bool isSelected,
-    int badgeCount = 0,
-  }) {
-    final state = context.read<AppState>();
-
-    return InkWell(
-      onTap: () => state.setNavIndex(index),
-      borderRadius: BorderRadius.circular(12),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryPurple.withOpacity(0.18) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          border: isSelected
-              ? Border.all(color: AppColors.primaryPurple.withOpacity(0.5), width: 1)
-              : Border.all(color: Colors.transparent),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 20,
-              color: isSelected ? Colors.white : AppColors.textLightSecondary,
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: isSelected ? Colors.white : AppColors.textLightSecondary,
-                  fontSize: 14,
-                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+  Widget _navItem(BuildContext context, AppState state, int index, IconData icon, String label, {int badge = 0}) {
+    final selected = state.currentNavIndex == index;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: InkWell(
+        onTap: () => state.setNavIndex(index),
+        borderRadius: BorderRadius.circular(10),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 11),
+          decoration: BoxDecoration(
+            color: selected ? AppColors.purpleLight : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 19, color: selected ? AppColors.primaryPurple : AppColors.textSecondary),
+              const SizedBox(width: 12),
+              Expanded(child: Text(label, style: TextStyle(color: selected ? AppColors.primaryPurple : AppColors.textSecondary, fontSize: 13, fontWeight: selected ? FontWeight.w700 : FontWeight.w500))),
+              if (badge > 0)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                  decoration: BoxDecoration(color: AppColors.primaryPurple, borderRadius: BorderRadius.circular(10)),
+                  child: Text('$badge', style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
                 ),
-              ),
-            ),
-            if (badgeCount > 0)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                decoration: BoxDecoration(
-                  color: AppColors.urgentRed,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  '$badgeCount',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildChannelItem({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-        child: Row(
-          children: [
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Icon(
-              icon,
-              size: 16,
-              color: AppColors.textLightSecondary,
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  color: AppColors.textLightSecondary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
+  Widget _quickItem(BuildContext context, AppState state, IconData icon, String label, String filter) {
+    final selected = state.currentNavIndex == 0 && state.selectedNoticeCategoryFilter.toLowerCase() == filter.toLowerCase();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 3),
+      child: InkWell(
+        onTap: () {
+          state.setNavIndex(0);
+          state.setNoticeFilter(filter);
+        },
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 9),
+          decoration: BoxDecoration(color: selected ? AppColors.purpleLight : Colors.transparent, borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            children: [
+              Icon(icon, size: 17, color: selected ? AppColors.primaryPurple : AppColors.textSecondary),
+              const SizedBox(width: 12),
+              Text(label, style: TextStyle(color: selected ? AppColors.primaryPurple : AppColors.textSecondary, fontSize: 12, fontWeight: selected ? FontWeight.w700 : FontWeight.w500)),
+            ],
+          ),
         ),
       ),
     );

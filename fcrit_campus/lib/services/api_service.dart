@@ -123,5 +123,38 @@ class ApiService {
       return {'success': false, 'message': 'Could not reach the event registration service.'};
     }
   }
+
+  static Future<Map<String, dynamic>> updateProfile({
+    required String name,
+    required String department,
+    required String yearOfStudy,
+    required String division,
+    required String rollNumber,
+    required List<String> clubs,
+  }) async {
+    if (_sessionToken == null) return {'success': false, 'message': 'Please sign in again to update your profile.'};
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/auth/profile'),
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $_sessionToken'},
+        body: jsonEncode({
+          'name': name,
+          'department': department,
+          'yearOfStudy': yearOfStudy,
+          'division': division,
+          'rollNumber': rollNumber,
+          'clubs': clubs,
+        }),
+      ).timeout(const Duration(seconds: 10));
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200) {
+        currentUserName = data['name'] as String? ?? name;
+        return {'success': true};
+      }
+      return {'success': false, 'message': data['message'] ?? 'Could not update your profile.'};
+    } catch (_) {
+      return {'success': false, 'message': 'Could not reach the profile service.'};
+    }
+  }
 }
 

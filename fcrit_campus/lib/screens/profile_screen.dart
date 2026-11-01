@@ -1,287 +1,130 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../state/app_state.dart';
 import '../theme/app_colors.dart';
 import 'profile_setup_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   final bool isDesktop;
-
-  const ProfileScreen({
-    super.key,
-    required this.isDesktop,
-  });
+  const ProfileScreen({super.key, required this.isDesktop});
 
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
     final profile = state.userProfile;
-
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(
-        horizontal: isDesktop ? 32 : 18,
-        vertical: 24,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: isDesktop ? 32 : 18, vertical: 24),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1000),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Profile Header Card
+              const Text('Your profile', style: TextStyle(fontSize: 23, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+              const SizedBox(height: 5),
+              const Text('Manage your personal and academic information.', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+              const SizedBox(height: 20),
               Container(
-                decoration: BoxDecoration(
-                  gradient: AppColors.purpleGradient,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primaryPurple.withOpacity(0.3),
-                      blurRadius: 18,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(28),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 36,
-                      backgroundColor: Colors.white.withOpacity(0.2),
-                      child: Text(
-                        profile.avatarInitials,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 26,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            profile.name,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            profile.email,
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.85),
-                              fontSize: 13,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 6,
-                            children: [
-                              _buildHeaderChip('${profile.department} Engineering'),
-                              _buildHeaderChip('${profile.yearOfStudy} Year • ${profile.division}'),
-                              _buildHeaderChip('Roll No: ${profile.rollNumber}'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (ctx) => const ProfileSetupScreen(),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: AppColors.primaryPurple,
-                      ),
-                      icon: const Icon(Icons.edit_rounded, size: 16),
-                      label: const Text('Edit Profile'),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 28),
-
-              // Academic & Preferences Grid
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final isTwoCol = constraints.maxWidth >= 600;
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Enrolled Clubs
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: AppColors.borderLight),
-                          ),
+                width: double.infinity,
+                padding: const EdgeInsets.all(22),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.borderLight)),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final narrow = constraints.maxWidth < 540;
+                    final identity = Row(
+                      children: [
+                        CircleAvatar(radius: 30, backgroundColor: AppColors.purpleLight, child: Text(profile.avatarInitials, style: const TextStyle(color: AppColors.primaryPurple, fontSize: 19, fontWeight: FontWeight.w700))),
+                        const SizedBox(width: 16),
+                        Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Row(
-                                children: [
-                                  Icon(Icons.diversity_3_rounded, color: AppColors.primaryPurple),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    'Active Clubs & Groups',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.textPrimary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 14),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: profile.clubs.map((club) {
-                                  return Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.purpleLight,
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(color: AppColors.primaryPurple.withOpacity(0.3)),
-                                    ),
-                                    child: Text(
-                                      club,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColors.purpleText,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
+                              Text(profile.name, style: const TextStyle(color: AppColors.textPrimary, fontSize: 19, fontWeight: FontWeight.w700), overflow: TextOverflow.ellipsis),
+                              const SizedBox(height: 4),
+                              Text(profile.email, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12), overflow: TextOverflow.ellipsis),
                             ],
                           ),
                         ),
-                      ),
-                      if (isTwoCol) ...[
-                        const SizedBox(width: 20),
-                        // Saved & Bookmarks Stat
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: AppColors.borderLight),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Row(
-                                  children: [
-                                    Icon(Icons.bookmark_added_rounded, color: AppColors.placements),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      'Saved Bookmarks',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColors.textPrimary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 14),
-                                Row(
-                                  children: [
-                                    _buildBookmarkCounter(
-                                      label: 'Saved Notices',
-                                      count: state.bookmarkedNoticesCount,
-                                      color: AppColors.primaryPurple,
-                                    ),
-                                    const SizedBox(width: 16),
-                                    _buildBookmarkCounter(
-                                      label: 'Saved Events',
-                                      count: state.bookmarkedEventsCount,
-                                      color: AppColors.events,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
                       ],
-                    ],
-                  );
-                },
-              ),
-
-              const SizedBox(height: 28),
-
-              // Account & Preferences
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.borderLight),
+                    );
+                    final editButton = OutlinedButton.icon(
+                      onPressed: () => _edit(context),
+                      icon: const Icon(Icons.edit_outlined, size: 17),
+                      label: const Text('Edit profile'),
+                    );
+                    if (narrow) return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [identity, const SizedBox(height: 16), editButton]);
+                    return Row(children: [Expanded(child: identity), const SizedBox(width: 16), editButton]);
+                  },
                 ),
-                child: Column(
+              ),
+              const SizedBox(height: 16),
+              _sectionCard(
+                title: 'Academic details',
+                icon: Icons.school_outlined,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final columns = constraints.maxWidth > 650 ? 4 : 2;
+                    final details = [
+                      _detail('Department', profile.department),
+                      _detail('Year of study', profile.yearOfStudy),
+                      _detail('Division', profile.division),
+                      _detail('Roll number', profile.rollNumber),
+                    ];
+                    return Wrap(
+                      spacing: 16,
+                      runSpacing: 18,
+                      children: details.map((detail) => SizedBox(width: (constraints.maxWidth - (columns - 1) * 16) / columns, child: detail)).toList(),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
+              _sectionCard(
+                title: 'Clubs and groups',
+                icon: Icons.diversity_3_outlined,
+                child: profile.clubs.isEmpty
+                    ? const Text('No clubs added yet. Edit your profile to add your groups.', style: TextStyle(color: AppColors.textSecondary, fontSize: 12))
+                    : Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: profile.clubs.map((club) => Chip(
+                              label: Text(club),
+                              backgroundColor: AppColors.purpleLight,
+                              side: BorderSide.none,
+                              labelStyle: const TextStyle(color: AppColors.purpleText, fontSize: 12, fontWeight: FontWeight.w600),
+                              visualDensity: VisualDensity.compact,
+                            )).toList(),
+                      ),
+              ),
+              const SizedBox(height: 16),
+              _sectionCard(
+                title: 'Campus activity',
+                icon: Icons.insights_outlined,
+                child: Row(
                   children: [
-                    _buildSettingsTile(
-                      icon: Icons.person_outline_rounded,
-                      title: 'Personalize Feed & Inbox',
-                      subtitle: 'Change Department, Year of Study, and Club affiliations',
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (ctx) => const ProfileSetupScreen(),
-                        );
-                      },
-                    ),
-                    const Divider(color: AppColors.borderLight, height: 1),
-                    _buildSettingsTile(
-                      icon: Icons.notifications_active_outlined,
-                      title: 'Push Notifications',
-                      subtitle: 'Receive urgent exam schedules and placement alerts',
-                      trailing: Switch(
-                        value: true,
-                        activeColor: AppColors.primaryPurple,
-                        onChanged: (_) {},
-                      ),
-                    ),
-                    const Divider(color: AppColors.borderLight, height: 1),
-                    _buildSettingsTile(
-                      icon: Icons.cloud_done_outlined,
-                      title: 'Backend API Connection',
-                      subtitle: 'Spring Boot REST endpoint on http://localhost:8080/api',
-                      trailing: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFD1FAE5),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Text(
-                          'Ready',
-                          style: TextStyle(
-                            color: Color(0xFF065F46),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ),
+                    _stat(context, 'Saved notices', state.bookmarkedNoticesCount, Icons.bookmark_outline_rounded),
+                    const SizedBox(width: 12),
+                    _stat(context, 'Saved events', state.bookmarkedEventsCount, Icons.event_outlined),
+                    const SizedBox(width: 12),
+                    _stat(context, 'Unread messages', state.unreadMessagesCount, Icons.mark_email_unread_outlined),
                   ],
                 ),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 16),
+              _sectionCard(
+                title: 'Account',
+                icon: Icons.manage_accounts_outlined,
+                child: Row(
+                  children: [
+                    const Icon(Icons.alternate_email_rounded, color: AppColors.textMuted, size: 18),
+                    const SizedBox(width: 10),
+                    Expanded(child: Text(profile.email, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13), overflow: TextOverflow.ellipsis)),
+                    const Text('Login email', style: TextStyle(color: AppColors.textMuted, fontSize: 11)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
             ],
           ),
         ),
@@ -289,92 +132,36 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderChip(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.18),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
+  Widget _sectionCard({required String title, required IconData icon, required Widget child}) => Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.borderLight)),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [Icon(icon, color: AppColors.primaryPurple, size: 19), const SizedBox(width: 9), Text(title, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w700))]),
+          const SizedBox(height: 16),
+          child,
+        ]),
+      );
 
-  Widget _buildBookmarkCounter({
-    required String label,
-    required int count,
-    required Color color,
-  }) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.2)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '$count',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                color: color,
-              ),
-            ),
+  Widget _detail(String label, String value) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(label, style: const TextStyle(color: AppColors.textMuted, fontSize: 11)),
+        const SizedBox(height: 4),
+        Text(value, style: const TextStyle(color: AppColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w600)),
+      ]);
+
+  Widget _stat(BuildContext context, String label, int value, IconData icon) => Expanded(
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(color: AppColors.backgroundLight, borderRadius: BorderRadius.circular(12)),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Icon(icon, color: AppColors.primaryPurple, size: 18),
+            const SizedBox(height: 10),
+            Text('$value', style: const TextStyle(color: AppColors.textPrimary, fontSize: 19, fontWeight: FontWeight.w700)),
             const SizedBox(height: 2),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
+            Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 10), maxLines: 2, overflow: TextOverflow.ellipsis),
+          ]),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildSettingsTile({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    Widget? trailing,
-    VoidCallback? onTap,
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.backgroundLight,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, color: AppColors.primaryPurple, size: 20),
-        ),
-        title: Text(
-          title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-        ),
-        trailing: trailing ?? const Icon(Icons.chevron_right_rounded),
-        onTap: onTap,
-      ),
-    );
-  }
+  void _edit(BuildContext context) => showDialog<void>(context: context, builder: (_) => const ProfileSetupScreen());
 }

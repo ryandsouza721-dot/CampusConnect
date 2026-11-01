@@ -1,443 +1,246 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../services/api_service.dart';
 import '../state/app_state.dart';
 import '../theme/app_colors.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   final VoidCallback? onComplete;
-
-  const ProfileSetupScreen({
-    super.key,
-    this.onComplete,
-  });
+  const ProfileSetupScreen({super.key, this.onComplete});
 
   @override
   State<ProfileSetupScreen> createState() => _ProfileSetupScreenState();
 }
 
 class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
-  late String _selectedDepartment;
-  late String _selectedYear;
-  late List<String> _selectedClubs;
+  final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _nameController;
+  late final TextEditingController _divisionController;
+  late final TextEditingController _rollController;
+  late String _department;
+  late String _year;
+  late List<String> _clubs;
+  bool _saving = false;
 
-  final List<String> departments = ['CSE', 'Mechanical', 'Civil', 'EXTC'];
-  final List<String> years = ['1st', '2nd', '3rd', '4th'];
-  final List<String> availableClubs = ['AI/ML', 'Coding', 'E-Cell', 'Sports', 'Cultural'];
+  static const _departments = ['Not set', 'CSE', 'Mechanical', 'Civil', 'EXTC'];
+  static const _years = ['Not set', '1st', '2nd', '3rd', '4th'];
+  static const _availableClubs = ['AI/ML', 'Coding', 'E-Cell', 'Sports', 'Cultural'];
 
   @override
   void initState() {
     super.initState();
     final profile = context.read<AppState>().userProfile;
-    _selectedDepartment = profile.department;
-    _selectedYear = profile.yearOfStudy;
-    _selectedClubs = List.from(profile.clubs);
+    _nameController = TextEditingController(text: profile.name);
+    _divisionController = TextEditingController(text: profile.division);
+    _rollController = TextEditingController(text: profile.rollNumber);
+    _department = profile.department;
+    _year = profile.yearOfStudy;
+    _clubs = List.of(profile.clubs);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _divisionController.dispose();
+    _rollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      child: Center(
-        child: Container(
-          width: 520,
-          constraints: const BoxConstraints(maxHeight: 780),
-          decoration: BoxDecoration(
-            color: AppColors.navyHeader,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5),
-                blurRadius: 30,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+      backgroundColor: Colors.white,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 620, maxHeight: 760),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 20, 16, 18),
+              child: Row(
                 children: [
-                  // Dark Navy Header (Matches reference 01)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(28, 28, 28, 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Logo Row
-                        Row(
-                          children: [
-                            Container(
-                              width: 36,
-                              height: 36,
-                              decoration: const BoxDecoration(
-                                gradient: AppColors.purpleGradient,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  'FC',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            const Text(
-                              'FCRIT Campus',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              icon: const Icon(Icons.close, color: Colors.white70),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 18),
-                        Text(
-                          'Welcome, ${context.read<AppState>().userProfile.name} 👋',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        const Text(
-                          'Set up your profile',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                        // Gradient text
-                        ShaderMask(
-                          shaderCallback: (bounds) => AppColors.purpleGradient.createShader(
-                            Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-                          ),
-                          child: const Text(
-                            'to personalize your inbox',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Messages and updates will be filtered for you.',
-                          style: TextStyle(
-                            color: AppColors.textLightSecondary,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Light Content Surface Form
                   Container(
-                    decoration: const BoxDecoration(
-                      color: AppColors.backgroundLight,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                    ),
-                    padding: const EdgeInsets.all(24),
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(color: AppColors.purpleLight, borderRadius: BorderRadius.circular(12)),
+                    child: const Icon(Icons.manage_accounts_outlined, color: AppColors.primaryPurple),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Card 1: Department
-                        _buildFormCard(
-                          icon: Icons.apartment_rounded,
-                          title: 'Department',
-                          isRequired: true,
-                          content: Wrap(
-                            spacing: 10,
-                            runSpacing: 10,
-                            children: departments.map((dept) {
-                              final isSelected = _selectedDepartment == dept;
-                              return _buildSelectableChip(
-                                label: dept,
-                                isSelected: isSelected,
-                                onTap: () {
-                                  setState(() => _selectedDepartment = dept);
-                                },
-                              );
-                            }).toList(),
-                          ),
-                        ),
-
-                        const SizedBox(height: 18),
-
-                        // Card 2: Year of Study
-                        _buildFormCard(
-                          icon: Icons.school_rounded,
-                          title: 'Year of Study',
-                          isRequired: true,
-                          content: Row(
-                            children: years.map((yr) {
-                              final isSelected = _selectedYear == yr;
-                              return Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                                  child: _buildSelectableChip(
-                                    label: yr,
-                                    isSelected: isSelected,
-                                    onTap: () {
-                                      setState(() => _selectedYear = yr);
-                                    },
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-
-                        const SizedBox(height: 18),
-
-                        // Card 3: Clubs & Groups (Multi-select)
-                        _buildFormCard(
-                          icon: Icons.tag_rounded,
-                          title: 'Clubs & Groups',
-                          subtitle: 'Select clubs you are a member of to receive targeted messages.',
-                          extraLabel: 'optional • multi-select',
-                          content: Wrap(
-                            spacing: 10,
-                            runSpacing: 10,
-                            children: availableClubs.map((club) {
-                              final isSelected = _selectedClubs.contains(club);
-                              return _buildSelectableChip(
-                                label: isSelected ? '✓ $club' : club,
-                                isSelected: isSelected,
-                                onTap: () {
-                                  setState(() {
-                                    if (isSelected) {
-                                      _selectedClubs.remove(club);
-                                    } else {
-                                      _selectedClubs.add(club);
-                                    }
-                                  });
-                                },
-                              );
-                            }).toList(),
-                          ),
-                        ),
-
-                        const SizedBox(height: 18),
-
-                        // Info Notice Box (Matches reference 01 & 02)
-                        Container(
-                          padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF0FDF4),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: const Color(0xFFBBF7D0)),
-                          ),
-                          child: const Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Icon(Icons.info_outline_rounded, color: Color(0xFF16A34A), size: 18),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  'You can update your department, year, and clubs anytime from your Profile settings.',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xFF15803D),
-                                    fontWeight: FontWeight.w500,
-                                    height: 1.4,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        // "Get Started ->" Button (Matches reference 02)
-                        Container(
-                          width: double.infinity,
-                          height: 52,
-                          decoration: BoxDecoration(
-                            gradient: AppColors.purpleGradient,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.primaryPurple.withOpacity(0.35),
-                                blurRadius: 14,
-                                offset: const Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: _submitProfile,
-                              borderRadius: BorderRadius.circular(16),
-                              child: const Center(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Get Started',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        letterSpacing: 0.3,
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        Text('Edit profile', style: TextStyle(color: AppColors.textPrimary, fontSize: 19, fontWeight: FontWeight.w700)),
+                        SizedBox(height: 3),
+                        Text('Keep your campus details up to date.', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
                       ],
                     ),
                   ),
+                  IconButton(onPressed: () => Navigator.pop(context), tooltip: 'Close', icon: const Icon(Icons.close, color: AppColors.textSecondary)),
                 ],
               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFormCard({
-    required IconData icon,
-    required String title,
-    bool isRequired = false,
-    String? subtitle,
-    String? extraLabel,
-    required Widget content,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderLight),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: AppColors.academicsBg,
-                  borderRadius: BorderRadius.circular(8),
+            const Divider(height: 1, color: AppColors.borderLight),
+            Flexible(
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(24),
+                  children: [
+                    _sectionTitle('Personal details'),
+                    const SizedBox(height: 14),
+                    _label('Full name'),
+                    const SizedBox(height: 6),
+                    TextFormField(
+                      controller: _nameController,
+                      textCapitalization: TextCapitalization.words,
+                      decoration: _decoration('Your name', Icons.person_outline_rounded),
+                      validator: (value) => value == null || value.trim().isEmpty ? 'Enter your name' : null,
+                    ),
+                    const SizedBox(height: 14),
+                    _label('College email'),
+                    const SizedBox(height: 6),
+                    TextFormField(
+                      initialValue: context.read<AppState>().userProfile.email,
+                      readOnly: true,
+                      decoration: _decoration('Email address', Icons.mail_outline_rounded),
+                    ),
+                    const SizedBox(height: 24),
+                    _sectionTitle('Academic details'),
+                    const SizedBox(height: 14),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final stacked = constraints.maxWidth < 440;
+                        final department = _dropdown<String>(
+                          label: 'Department',
+                          value: _department,
+                          items: _departments,
+                          onChanged: (value) => setState(() => _department = value!),
+                        );
+                        final year = _dropdown<String>(
+                          label: 'Year of study',
+                          value: _year,
+                          items: _years,
+                          onChanged: (value) => setState(() => _year = value!),
+                        );
+                        if (stacked) return Column(children: [department, const SizedBox(height: 12), year]);
+                        return Row(children: [Expanded(child: department), const SizedBox(width: 12), Expanded(child: year)]);
+                      },
+                    ),
+                    const SizedBox(height: 14),
+                    Row(
+                      children: [
+                        Expanded(child: _textField(label: 'Division', controller: _divisionController, hint: 'e.g. Div B')),
+                        const SizedBox(width: 12),
+                        Expanded(child: _textField(label: 'Roll number', controller: _rollController, hint: 'e.g. 42')),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    _sectionTitle('Clubs and groups'),
+                    const SizedBox(height: 4),
+                    const Text('Choose the groups you are part of.', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: _availableClubs.map((club) {
+                        final selected = _clubs.contains(club);
+                        return FilterChip(
+                          label: Text(club),
+                          selected: selected,
+                          onSelected: (value) => setState(() => value ? _clubs.add(club) : _clubs.remove(club)),
+                          showCheckmark: true,
+                          selectedColor: AppColors.purpleLight,
+                          checkmarkColor: AppColors.primaryPurple,
+                          side: BorderSide(color: selected ? AppColors.primaryPurple.withOpacity(0.3) : AppColors.borderLight),
+                          labelStyle: TextStyle(color: selected ? AppColors.purpleText : AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 26),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                        const SizedBox(width: 8),
+                        ElevatedButton.icon(
+                          onPressed: _saving ? null : _save,
+                          icon: const Icon(Icons.check_rounded, size: 18),
+                          label: Text(_saving ? 'Saving…' : 'Save changes'),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                child: Icon(icon, color: AppColors.primaryPurple, size: 18),
               ),
-              const SizedBox(width: 10),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              if (isRequired) ...[
-                const SizedBox(width: 4),
-                const Text('*', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-              ],
-              const Spacer(),
-              if (extraLabel != null)
-                Text(
-                  extraLabel,
-                  style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
-                ),
-            ],
-          ),
-          if (subtitle != null) ...[
-            const SizedBox(height: 8),
-            Text(
-              subtitle,
-              style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
             ),
           ],
-          const SizedBox(height: 14),
-          content,
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionTitle(String text) => Text(text, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w700));
+  Widget _label(String text) => Text(text, style: const TextStyle(color: AppColors.textPrimary, fontSize: 12, fontWeight: FontWeight.w600));
+
+  Widget _textField({required String label, required TextEditingController controller, required String hint}) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _label(label),
+          const SizedBox(height: 6),
+          TextFormField(controller: controller, decoration: _decoration(hint, null)),
         ],
-      ),
-    );
-  }
+      );
 
-  Widget _buildSelectableChip({
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryPurple : const Color(0xFFF1F5F9),
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: AppColors.primaryPurple.withOpacity(0.35),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  ),
-                ]
-              : null,
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.white : AppColors.textPrimary,
-              fontSize: 13,
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget _dropdown<T>({required String label, required T value, required List<T> items, required ValueChanged<T?> onChanged}) => DropdownButtonFormField<T>(
+        value: value,
+        decoration: _decoration(label, null),
+        items: items.map((item) => DropdownMenuItem<T>(value: item, child: Text('$item'))).toList(),
+        onChanged: onChanged,
+      );
 
-  void _submitProfile() {
+  InputDecoration _decoration(String hint, IconData? icon) => InputDecoration(
+        hintText: hint,
+        prefixIcon: icon == null ? null : Icon(icon, size: 19, color: AppColors.textMuted),
+        filled: true,
+        fillColor: const Color(0xFFFAFBFD),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.borderLight)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.borderLight)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.primaryPurple, width: 1.5)),
+      );
+
+  Future<void> _save() async {
+    if (!_formKey.currentState!.validate()) return;
+    final name = _nameController.text.trim();
+    setState(() => _saving = true);
+    final result = await ApiService.updateProfile(
+      name: name,
+      department: _department,
+      yearOfStudy: _year,
+      division: _divisionController.text.trim().isEmpty ? '—' : _divisionController.text.trim(),
+      rollNumber: _rollController.text.trim().isEmpty ? '—' : _rollController.text.trim(),
+      clubs: _clubs,
+    );
+    if (!mounted) return;
+    if (result['success'] != true) {
+      setState(() => _saving = false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result['message'] as String? ?? 'Could not update profile.')));
+      return;
+    }
     context.read<AppState>().updateProfile(
-          department: _selectedDepartment,
-          yearOfStudy: _selectedYear,
-          clubs: _selectedClubs,
+          name: name,
+          department: _department,
+          yearOfStudy: _year,
+          division: _divisionController.text.trim().isEmpty ? '—' : _divisionController.text.trim(),
+          rollNumber: _rollController.text.trim().isEmpty ? '—' : _rollController.text.trim(),
+          clubs: _clubs,
         );
-
     Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Profile personalized successfully!'),
-        backgroundColor: AppColors.primaryPurple,
-      ),
-    );
-
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile updated')));
     widget.onComplete?.call();
   }
 }

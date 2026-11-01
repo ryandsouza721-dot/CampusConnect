@@ -34,35 +34,35 @@ class QuickAccessBar extends StatelessWidget {
       title: 'Notices',
       icon: Icons.notifications_none_rounded,
       activeColor: AppColors.primaryPurple,
-      backgroundColor: Color(0xFFEDE9FE),
+      backgroundColor: AppColors.purpleLight,
       filterKey: 'Notices',
     ),
     QuickAccessItemData(
       title: 'Placements',
       icon: Icons.business_center_outlined,
-      activeColor: AppColors.placements,
-      backgroundColor: Color(0xFFD1FAE5),
+      activeColor: AppColors.primaryPurple,
+      backgroundColor: AppColors.purpleLight,
       filterKey: 'Placements',
     ),
     QuickAccessItemData(
       title: 'Clubs',
       icon: Icons.music_note_outlined,
-      activeColor: AppColors.clubs,
-      backgroundColor: Color(0xFFFEF3C7),
+      activeColor: AppColors.primaryPurple,
+      backgroundColor: AppColors.purpleLight,
       filterKey: 'Clubs',
     ),
     QuickAccessItemData(
       title: 'Events',
       icon: Icons.calendar_today_outlined,
-      activeColor: AppColors.events,
-      backgroundColor: Color(0xFFE0F2FE),
+      activeColor: AppColors.primaryPurple,
+      backgroundColor: AppColors.purpleLight,
       filterKey: 'Events',
     ),
     QuickAccessItemData(
       title: 'Academics',
       icon: Icons.menu_book_rounded,
-      activeColor: AppColors.cultural,
-      backgroundColor: Color(0xFFFCE7F3),
+      activeColor: AppColors.primaryPurple,
+      backgroundColor: AppColors.purpleLight,
       filterKey: 'Academics',
     ),
   ];
@@ -148,22 +148,8 @@ class QuickAccessBar extends StatelessWidget {
             height: 58,
             decoration: BoxDecoration(
               color: isSelected ? item.activeColor : item.backgroundColor,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: isSelected
-                  ? [
-                      BoxShadow(
-                        color: item.activeColor.withOpacity(0.4),
-                        blurRadius: 12,
-                        offset: const Offset(0, 6),
-                      ),
-                    ]
-                  : [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.03),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: isSelected ? item.activeColor.withOpacity(0.22) : AppColors.borderLight),
             ),
             child: Icon(
               item.icon,

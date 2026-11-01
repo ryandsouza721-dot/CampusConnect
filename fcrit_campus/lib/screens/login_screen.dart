@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../services/api_service.dart';
+import '../state/app_state.dart';
 import '../theme/app_colors.dart';
 import 'desktop_shell.dart';
 
@@ -47,6 +49,17 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = false);
 
     if (result['success'] == true) {
+      final data = result['data'] as Map<String, dynamic>;
+      context.read<AppState>().setAuthenticatedUser(
+            id: data['id']?.toString(),
+            name: data['name'] as String? ?? _nameController.text.trim(),
+            email: data['email'] as String? ?? _emailController.text.trim(),
+            department: data['department'] as String?,
+            yearOfStudy: data['yearOfStudy'] as String?,
+            division: data['division'] as String?,
+            rollNumber: data['rollNumber'] as String?,
+            clubs: (data['clubs'] as List<dynamic>?)?.cast<String>(),
+          );
       Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(builder: (_) => const DesktopShell()),
       );

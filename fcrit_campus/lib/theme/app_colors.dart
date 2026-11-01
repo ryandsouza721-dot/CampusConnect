@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Brand Dark Navy
-  static const Color navyBackground = Color(0xFF090D1A);
-  static const Color navyHeader = Color(0xFF0F172A);
-  static const Color navySurface = Color(0xFF131B2E);
-  static const Color navyBorder = Color(0xFF1E293B);
+  static const Color navyBackground = Color(0xFFF5F8FC);
+  static const Color navyHeader = Color(0xFFFFFFFF);
+  static const Color navySurface = Color(0xFFF4F8FC);
+  static const Color navyBorder = Color(0xFFE2EAF3);
 
   // Gradient Purples / Accents
-  static const Color primaryPurple = Color(0xFF7C3AED);
-  static const Color primaryViolet = Color(0xFF9333EA);
-  static const Color accentIndigo = Color(0xFF6366F1);
-  static const Color purpleLight = Color(0xFFF3E8FF);
-  static const Color purpleText = Color(0xFF6B21A8);
+  static const Color primaryPurple = Color(0xFF3478C9);
+  static const Color primaryViolet = Color(0xFF2867B2);
+  static const Color accentIndigo = Color(0xFF4F8FD6);
+  static const Color purpleLight = Color(0xFFEAF3FC);
+  static const Color purpleText = Color(0xFF285F9C);
 
   // Content Surfaces
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color backgroundLight = Color(0xFFF5F8FC);
   static const Color surfaceWhite = Color(0xFFFFFFFF);
-  static const Color borderLight = Color(0xFFE2E8F0);
-  static const Color borderSubtle = Color(0xFFEEF2F6);
+  static const Color borderLight = Color(0xFFE2EAF3);
+  static const Color borderSubtle = Color(0xFFF0F4F8);
 
   // Text Colors
   static const Color textPrimary = Color(0xFF0F172A);
@@ -60,19 +60,19 @@ class AppColors {
 
   // Gradients
   static const LinearGradient purpleGradient = LinearGradient(
-    colors: [Color(0xFF6366F1), Color(0xFF8B5CF6), Color(0xFF9333EA)],
+    colors: [Color(0xFF5A91D0), Color(0xFF3478C9), Color(0xFF2867B2)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient bannerGradient = LinearGradient(
-    colors: [Color(0xFF6D28D9), Color(0xFF7C3AED), Color(0xFF9333EA)],
+    colors: [Color(0xFF4C88C8), Color(0xFF3478C9), Color(0xFF2867B2)],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
   );
 
   static const LinearGradient cardHeaderGradient = LinearGradient(
-    colors: [Color(0xFF7C3AED), Color(0xFF9333EA)],
+    colors: [Color(0xFF4C88C8), Color(0xFF3478C9)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

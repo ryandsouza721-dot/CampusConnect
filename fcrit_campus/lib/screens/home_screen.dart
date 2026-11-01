@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/important_notice_banner.dart';
-import '../widgets/quick_access_bar.dart';
 import '../widgets/notice_card.dart';
+import '../widgets/campus_tasks_card.dart';
 
 class HomeScreen extends StatelessWidget {
   final bool isDesktop;
@@ -37,18 +37,10 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 28),
 
-              // 2. Quick Access shortcuts (Matches reference 03, 05, 06, 07)
-              QuickAccessBar(
-                selectedCategory: state.selectedNoticeCategoryFilter,
-                onCategorySelected: (category) {
-                  state.setNoticeFilter(category);
-                },
-                onSeeAllTap: () {
-                  state.setNoticeFilter('All');
-                },
-              ),
+              // Personal study checklist
+              const CampusTasksCard(),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
 
               // 3. Latest Notices header
               Row(
