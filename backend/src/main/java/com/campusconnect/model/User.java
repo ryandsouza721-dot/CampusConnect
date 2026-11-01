@@ -28,6 +28,21 @@ public class User {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(length = 60)
+    private String department;
+
+    @Column(name = "year_of_study", length = 20)
+    private String yearOfStudy;
+
+    @Column(length = 40)
+    private String division;
+
+    @Column(name = "roll_number", length = 40)
+    private String rollNumber;
+
+    @Column(name = "profile_clubs", length = 1000)
+    private String profileClubs;
+
     public enum Role {
         STUDENT,
         ADMIN,
@@ -90,5 +105,16 @@ public class User {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
+    public String getYearOfStudy() { return yearOfStudy; }
+    public void setYearOfStudy(String yearOfStudy) { this.yearOfStudy = yearOfStudy; }
+    public String getDivision() { return division; }
+    public void setDivision(String division) { this.division = division; }
+    public String getRollNumber() { return rollNumber; }
+    public void setRollNumber(String rollNumber) { this.rollNumber = rollNumber; }
+    public String getProfileClubs() { return profileClubs; }
+    public void setProfileClubs(String profileClubs) { this.profileClubs = profileClubs; }
 }
 

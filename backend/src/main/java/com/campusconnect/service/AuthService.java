@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.campusconnect.model.User.Role;
 
 import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -58,5 +60,19 @@ public class AuthService {
         User saved = userRepository.save(user);
         emailNotifications.registration(saved.getName(), saved.getEmail());
         return saved;
+    }
+
+    public Optional<User> updateProfile(Integer userId, String name, String department, String year,
+                                        String division, String rollNumber, List<String> clubs) {
+        if (name == null || name.isBlank()) return Optional.empty();
+        return userRepository.findById(userId).map(user -> {
+            user.setName(name.trim());
+            user.setDepartment(department);
+            user.setYearOfStudy(year);
+            user.setDivision(division);
+            user.setRollNumber(rollNumber);
+            user.setProfileClubs(clubs == null ? "" : clubs.stream().filter(value -> value != null && !value.isBlank()).collect(Collectors.joining(",")));
+            return userRepository.save(user);
+        });
     }
 }

@@ -1,8 +1,8 @@
 package com.campusconnect.controller;
-//ubln jeav baod iymn
 import com.campusconnect.dto.LoginRequest;
 import com.campusconnect.dto.LoginResponse;
 import com.campusconnect.dto.RegisterRequest;
+import com.campusconnect.dto.ProfileUpdateRequest;
 import com.campusconnect.model.User;
 import com.campusconnect.service.AuthService;
 import com.campusconnect.service.SessionTokenService;
@@ -47,6 +47,12 @@ public class AuthController {
                     "Login successful"
             );
             response.setToken(sessions.issue(user));
+            response.setDepartment(user.getDepartment());
+            response.setYearOfStudy(user.getYearOfStudy());
+            response.setDivision(user.getDivision());
+            response.setRollNumber(user.getRollNumber());
+            response.setClubs(user.getProfileClubs() == null || user.getProfileClubs().isBlank()
+                    ? java.util.List.of() : java.util.List.of(user.getProfileClubs().split(",")));
 
             return ResponseEntity.ok(response);
         }
@@ -72,5 +78,18 @@ public class AuthController {
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.badRequest().body(java.util.Map.of("message", exception.getMessage()));
         }
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(
+            @RequestHeader(value = "Authorization", required = false) String authorization,
+            @RequestBody ProfileUpdateRequest request) {
+        Integer userId = sessions.resolve(authorization);
+        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(java.util.Map.of("message", "Please sign in again."));
+        if (request.getName() == null || request.getName().isBlank()) return ResponseEntity.badRequest().body(java.util.Map.of("message", "Name is required."));
+        return authService.updateProfile(userId, request.getName(), request.getDepartment(), request.getYearOfStudy(),
+                        request.getDivision(), request.getRollNumber(), request.getClubs())
+                .<ResponseEntity<?>>map(user -> ResponseEntity.ok(java.util.Map.of("name", user.getName())))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(java.util.Map.of("message", "User account not found.")));
     }
 }
