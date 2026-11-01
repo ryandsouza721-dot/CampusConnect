@@ -1,0 +1,25 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Spring Boot
+backend/target/
+*.class
+
+# Flutter
+fcrit_campus/.dart_tool/
+fcrit_campus/build/
+fcrit_campus/.flutter-plugins
+fcrit_campus/.flutter-plugins-dependencies
+
+# Secrets
+.env
+.env.*
+!.env.example
+application-secret.properties
+
+# Windows
+Thumbs.db
+.DS_Store
+backend.zip
+backend/src/main/resources/application.properties

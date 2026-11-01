@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FCRIT Campus — Desktop UI Live Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-bg: #090D1A;
+      --navy-header: #0F172A;
+      --navy-surface: #131B2E;
+      --navy-border: #1E293B;
+      --purple-primary: #7C3AED;
+      --purple-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #9333EA 100%);
+      --banner-gradient: linear-gradient(90deg, #6D28D9 0%, #7C3AED 50%, #9333EA 100%);
+      --bg-light: #F8FAFC;
+      --surface-white: #FFFFFF;
+      --border-light: #E2E8F0;
+      --text-primary: #0F172A;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      --cat-academics: #7C3AED;
+      --cat-academics-bg: #EDE9FE;
+      --cat-placements: #10B981;
+      --cat-placements-bg: #D1FAE5;
+      --cat-clubs: #F59E0B;
+      --cat-clubs-bg: #FEF3C7;
+      --cat-events: #0284C7;
+      --cat-events-bg: #E0F2FE;
+      --cat-cultural: #EC4899;
+      --cat-cultural-bg: #FCE7F3;
+      --urgent-red: #EF4444;
+      --urgent-bg: #FEE2E2;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-primary);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 270px;
+      background-color: var(--navy-header);
+      border-right: 1px solid var(--navy-border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .brand-header {
+      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--navy-border);
+    }
+
+    .brand-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--purple-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 17px;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+    }
+
+    .brand-title {
+      color: #fff;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.2px;
+    }
+
+    .brand-subtitle {
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .nav-section {
+      padding: 20px 14px 10px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .section-label {
+      color: #64748B;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding-left: 12px;
+      margin-bottom: 10px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 4px;
+    }
+
+    .nav-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    .nav-item.active {
+      background-color: rgba(124, 58, 237, 0.2);
+      color: #fff;
+      border: 1px solid rgba(124, 58, 237, 0.5);
+    }
+
+    .badge-count {
+      margin-left: auto;
+      background-color: var(--urgent-red);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+
+    .channel-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .channel-item:hover {
+      background-color: rgba(255, 255, 255, 0.04);
+      color: #CBD5E1;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .user-footer {
+      padding: 14px;
+      background-color: var(--navy-surface);
+      margin: 14px;
+      border-radius: 14px;
+      border: 1px solid var(--navy-border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-footer-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--purple-primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    /* Main Area */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .top-header {
+      background-color: var(--navy-header);
+      border-bottom: 1px solid var(--navy-border);
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left .date-str {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .header-left .greeting-str {
+      color: #fff;
+      font-size: 22px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-chips {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .chip-purple {
+      background: rgba(124, 58, 237, 0.25);
+      border: 1px solid rgba(124, 58, 237, 0.4);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .chip-dark {
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: #CBD5E1;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .search-input {
+      background-color: var(--navy-surface);
+      border: 1px solid var(--navy-border);
+      color: #fff;
+      padding: 9px 16px;
+      border-radius: 24px;
+      font-size: 13px;
+      width: 240px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--purple-primary);
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--navy-surface);
+      border: 1px solid var(--navy-border);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .notif-dot {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 8px;
+      height: 8px;
+      background: #F97316;
+      border-radius: 50%;
+    }
+
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 36px;
+    }
+
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+
+    /* Important Notice Banner */
+    .banner {
+      background: var(--banner-gradient);
+      border-radius: 20px;
+      padding: 20px 24px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.35);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .banner:hover {
+      transform: translateY(-2px);
+    }
+
+    .banner-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .banner-tag {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      opacity: 0.9;
+    }
+
+    .banner-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin: 2px 0;
+    }
+
+    .banner-desc {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    /* Quick Access Bar */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 30px 0 16px;
+    }
+
+    .section-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .see-all {
+      color: var(--purple-primary);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .quick-access-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .qa-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .qa-box {
+      width: 62px;
+      height: 62px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .qa-card.active .qa-box {
+      box-shadow: 0 8px 18px rgba(124, 58, 237, 0.35);
+      transform: scale(1.05);
+    }
+
+    .qa-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .qa-card.active .qa-label {
+      color: var(--purple-primary);
+      font-weight: 800;
+    }
+
+    .qa-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--purple-primary);
+      opacity: 0;
+    }
+
+    .qa-card.active .qa-indicator {
+      opacity: 1;
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+      gap: 18px;
+    }
+
+    .notice-card {
+      background: #fff;
+      border-radius: 18px;
+      border: 1px solid var(--border-light);
+      padding: 18px 20px;
+      display: flex;
+      gap: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+
+    .notice-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+    }
+
+    .notice-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--card-color, var(--purple-primary));
+    }
+
+    .notice-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .notice-body {
+      flex: 1;
+    }
+
+    .pill-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .cat-pill {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .new-pill {
+      background: var(--cat-academics-bg);
+      color: var(--cat-academics);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .notice-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.35;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .notice-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .bookmark-btn {
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .bookmark-btn.active {
+      color: var(--purple-primary);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #fff;
+      border-radius: 24px;
+      width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Persistent Desktop Sidebar -->
+  <aside class="sidebar">
+    <div class="brand-header">
+      <div class="brand-avatar">FC</div>
+      <div>
+        <div class="brand-title">FCRIT Campus</div>
+        <div class="brand-subtitle">Desktop Experience</div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="section-label">MAIN NAVIGATION</div>
+      <div class="nav-item active" onclick="switchTab('home')">
+        <span>🏠</span> Home
+      </div>
+      <div class="nav-item" onclick="switchTab('events')">
+        <span>📅</span> Events
+      </div>
+      <div class="nav-item" onclick="switchTab('messages')">
+        <span>💬</span> Messages
+        <span class="badge-count">3</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('profile')">
+        <span>👤</span> Profile
+      </div>
+
+      <div class="section-label" style="margin-top: 24px;">CHANNELS</div>
+      <div class="channel-item" onclick="filterCategory('Notices')">
+        <span class="dot" style="background:#7C3AED;"></span> Latest Notices
+      </div>
+      <div class="channel-item" onclick="filterCategory('Placements')">
+        <span class="dot" style="background:#10B981;"></span> Placements Drive
+      </div>
+      <div class="channel-item" onclick="filterCategory('Clubs')">
+        <span class="dot" style="background:#F59E0B;"></span> Clubs & Cultural
+      </div>
+      <div class="channel-item" onclick="filterCategory('Academics')">
+        <span class="dot" style="background:#EC4899;"></span> Academics Portal
+      </div>
+    </div>
+
+    <div class="user-footer">
+      <div class="user-footer-avatar">D</div>
+      <div style="flex: 1; overflow: hidden;">
+        <div style="color: #fff; font-size: 13px; font-weight: 700;">Darvin</div>
+        <div style="color: var(--text-muted); font-size: 11px;">CSE • 2nd Year</div>
+      </div>
+      <span style="color: var(--text-muted); cursor: pointer;" onclick="openProfileModal()">⚙️</span>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="main-wrapper">
+    <!-- Top Header Bar -->
+    <header class="top-header">
+      <div class="header-left">
+        <div class="date-str">Friday, August 8</div>
+        <div class="greeting-str">Good morning, Darvin 👋</div>
+        <div class="header-chips">
+          <span class="chip-purple">CSE • 2nd Year</span>
+          <span class="chip-dark">Div B • Roll 42</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <input type="text" class="search-input" placeholder="Search campus notices..." onkeyup="searchNotices(this.value)">
+        <div class="icon-btn" onclick="switchTab('home'); filterCategory('Notices')">
+          🔔
+          <div class="notif-dot"></div>
+        </div>
+        <div class="icon-btn" style="background: var(--purple-gradient); font-weight: 700;" onclick="openProfileModal()">
+          FC
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <main class="content-area">
+      <div class="container" id="page-content">
+        <!-- 1. Important Notice Banner -->
+        <div class="banner" onclick="showModal('ESE Timetable for May 2026 Released', 'The finalized timetable for the May 2026 End Semester Examinations is available for download on the student academic portal. Students must report any course clashes before August 10.')">
+          <div class="banner-icon">ℹ️</div>
+          <div style="flex:1;">
+            <div class="banner-tag">IMPORTANT NOTICE</div>
+            <div class="banner-title">ESE Timetable for May 2026 Released</div>
+            <div class="banner-desc">Download from Academic portal by Aug 10</div>
+          </div>
+          <div style="font-size: 20px;">❯</div>
+        </div>
+
+        <!-- 2. Quick Access Shortcuts -->
+        <div class="section-header">
+          <div class="section-title">Quick Access</div>
+          <span class="see-all" onclick="filterCategory('All')">See all</span>
+        </div>
+
+        <div class="quick-access-grid">
+          <div class="qa-card active" id="qa-Notices" onclick="filterCategory('Notices')">
+            <div class="qa-box" style="background: #EDE9FE; color: #7C3AED;">🔔</div>
+            <span class="qa-label">Notices</span>
+            <div class="qa-indicator"></div>
+          </div>
+          <div class="qa-card" id="qa-Placements" onclick="filterCategory('Placements')">
+            <div class="qa-box" style="background: #D1FAE5; color: #10B981;">💼</div>
+            <span class="qa-label">Placements</span>
+            <div class="qa-indicator" style="background:#10B981;"></div>
+          </div>
+          <div class="qa-card" id="qa-Clubs" onclick="filterCategory('Clubs')">
+            <div class="qa-box" style="background: #FEF3C7; color: #F59E0B;">🎵</div>
+            <span class="qa-label">Clubs</span>
+            <div class="qa-indicator" style="background:#F59E0B;"></div>
+          </div>
+          <div class="qa-card" id="qa-Events" onclick="filterCategory('Events')">
+            <div class="qa-box" style="background: #E0F2FE; color: #0284C7;">📅</div>
+            <span class="qa-label">Events</span>
+            <div class="qa-indicator" style="background:#0284C7;"></div>
+          </div>
+          <div class="qa-card" id="qa-Academics" onclick="filterCategory('Academics')">
+            <div class="qa-box" style="background: #FCE7F3; color: #EC4899;">📖</div>
+            <span class="qa-label">Academics</span>
+            <div class="qa-indicator" style="background:#EC4899;"></div>
+          </div>
+        </div>
+
+        <!-- 3. Latest Notices Feed -->
+        <div class="section-header">
+          <div class="section-title">
+            Latest Notices
+            <span style="background: #EDE9FE; color: #7C3AED; font-size: 12px; padding: 2px 8px; border-radius: 10px;" id="notices-count">4</span>
+          </div>
+          <span class="see-all" onclick="filterCategory('All')">View all</span>
+        </div>
+
+        <div class="cards-grid" id="notices-container">
+          <!-- Dynamic Notice Cards injected via JS -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Detail Dialog Modal -->
+  <div class="modal-overlay" id="detail-modal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div style="background: var(--navy-header); color: #fff; padding: 20px 24px; border-radius: 24px 24px 0 0; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-weight: 700; font-size: 16px;">Notice Details</span>
+        <button style="background:none; border:none; color:#fff; font-size: 20px; cursor:pointer;" onclick="closeModalDirect()">✕</button>
+      </div>
+      <div style="padding: 24px;">
+        <h3 id="modal-title" style="font-size: 18px; margin-bottom: 12px; color: var(--text-primary);"></h3>
+        <p id="modal-body" style="font-size: 14px; line-height: 1.6; color: var(--text-secondary);"></p>
+        <button style="margin-top: 20px; width: 100%; padding: 12px; background: var(--purple-primary); color: #fff; border: none; border-radius: 12px; font-weight: 700; cursor: pointer;" onclick="closeModalDirect()">Acknowledge</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const noticesData = [
+      {
+        id: 1,
+        title: "End Semester Examination Timetable – May 2026",
+        category: "ACADEMICS",
+        catKey: "Academics",
+        color: "#7C3AED",
+        bg: "#EDE9FE",
+        icon: "📖",
+        isNew: true,
+        publisher: "Academic Office",
+        date: "Aug 6, 2026",
+        views: 312,
+        bookmarked: false,
+        desc: "The detailed schedule for the upcoming End Semester Examinations (ESE) has been published on the student portal. Verify course codes and room allocations."
+      },
+      {
+        id: 2,
+        title: "Campus Recruitment Drive – TCS NQT Registration Open",
+        category: "PLACEMENTS",
+        catKey: "Placements",
+        color: "#10B981",
+        bg: "#D1FAE5",
+        icon: "💼",
+        isNew: true,
+        publisher: "Training & Placement Cell",
+        date: "Aug 5, 2026",
+        views: 489,
+        bookmarked: true,
+        desc: "Tata Consultancy Services invites applications for the National Qualifier Test (NQT) for the batch of 2026. Register via the TPO portal."
+      },
+      {
+        id: 3,
+        title: "Annual Cultural Fest 'Euphoria 2026' – Volunteer Registration",
+        category: "CLUBS",
+        catKey: "Clubs",
+        color: "#F59E0B",
+        bg: "#FEF3C7",
+        icon: "🎵",
+        isNew: false,
+        publisher: "Cultural Committee",
+        date: "Aug 4, 2026",
+        views: 201,
+        bookmarked: false,
+        desc: "Registrations are open for student coordinators and volunteers across Event Management, Logistics, Hospitality, and Creative Media teams."
+      },
+      {
+        id: 4,
+        title: "Guest Lecture: AI Ethics & Responsible ML",
+        category: "EVENTS",
+        catKey: "Events",
+        color: "#0284C7",
+        bg: "#E0F2FE",
+        icon: "⭐",
+        isNew: false,
+        publisher: "CSE Department",
+        date: "Aug 3, 2026",
+        views: 167,
+        bookmarked: false,
+        desc: "Distinguished speaker Dr. Thorne addresses ethical considerations, fairness metrics, and governance in real-world ML deployments."
+      }
+    ];
+
+    let currentFilter = 'All';
+
+    function renderNotices() {
+      const container = document.getElementById('notices-container');
+      const filtered = currentFilter === 'All' || currentFilter === 'Notices'
+        ? noticesData
+        : noticesData.filter(n => n.catKey.toLowerCase() === currentFilter.toLowerCase());
+
+      document.getElementById('notices-count').innerText = filtered.length;
+
+      container.innerHTML = filtered.map(n => `
+        <div class="notice-card" style="--card-color: ${n.color};">
+          <div class="notice-icon-box" style="background: ${n.bg}; color: ${n.color};">
+            ${n.icon}
+          </div>
+          <div class="notice-body">
+            <div class="pill-row">
+              <span class="cat-pill" style="background: ${n.bg}; color: ${n.color};">${n.category}</span>
+              ${n.isNew ? '<span class="new-pill">NEW</span>' : ''}
+              <span class="bookmark-btn ${n.bookmarked ? 'active' : ''}" onclick="toggleBookmark(${n.id})">
+                ${n.bookmarked ? '★' : '☆'}
+              </span>
+            </div>
+            <div class="notice-title" onclick="showModal('${n.title}', '${n.desc}')">${n.title}</div>
+            <div class="notice-meta">
+              <span>${n.publisher} • ${n.date}</span>
+              <span>👁 ${n.views}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterCategory(cat) {
+      currentFilter = cat;
+      document.querySelectorAll('.qa-card').forEach(c => c.classList.remove('active'));
+      const activeEl = document.getElementById('qa-' + cat);
+      if (activeEl) activeEl.classList.add('active');
+      renderNotices();
+    }
+
+    function toggleBookmark(id) {
+      const item = noticesData.find(n => n.id === id);
+      if (item) {
+        item.bookmarked = !item.bookmarked;
+        renderNotices();
+      }
+    }
+
+    function showModal(title, body) {
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-body').innerText = body;
+      document.getElementById('detail-modal').classList.add('open');
+    }
+
+    function closeModalDirect() {
+      document.getElementById('detail-modal').classList.remove('open');
+    }
+
+    function closeModal(e) {
+      if (e.target.id === 'detail-modal') {
+        closeModalDirect();
+      }
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      if (tab === 'home') {
+        filterCategory('All');
+      } else {
+        alert('Navigated to: ' + tab.toUpperCase() + ' section. All corresponding Flutter code is loaded in lib/screens/' + tab + '_screen.dart');
+      }
+    }
+
+    function openProfileModal() {
+      showModal('Personalize Profile', 'In the Flutter desktop app, this launches ProfileSetupScreen (reference 01 & 02) allowing instant editing of Department (CSE, Mechanical, Civil, EXTC), Year of Study (1st to 4th), and multi-select Clubs.');
+    }
+
+    function searchNotices(q) {
+      const term = q.toLowerCase();
+      document.querySelectorAll('.notice-card').forEach(card => {
+        const title = card.querySelector('.notice-title').innerText.toLowerCase();
+        card.style.display = title.includes(term) ? 'flex' : 'none';
+      });
+    }
+
+    // Initial render
+    renderNotices();
+  </script>
+</body>
+</html>
