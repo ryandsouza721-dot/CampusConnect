@@ -202,7 +202,7 @@ class EventCard extends StatelessWidget {
                     ),
                   ],
                   // CTA button if ongoing or registration applicable
-                  if (event.ctaText != null || event.status == EventStatus.ongoing) ...[
+                  if (event.status != EventStatus.past) ...[
                     const SizedBox(height: 14),
                     SizedBox(
                       width: double.infinity,

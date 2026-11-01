@@ -119,6 +119,7 @@ class MockData {
           isBookmarked: false,
           description:
               'A flagship 12-hour sprint solving problems in AI, Web3, and HealthTech. Cash prizes, certificates, and direct internship fast-tracks for winners.',
+          eventDate: DateTime(2027, 8, 15, 9),
         ),
         EventItem(
           id: 'event_2',
@@ -132,6 +133,7 @@ class MockData {
           isBookmarked: false,
           description:
               'Explore how software engineering transitions into technical product management with guest leaders from Microsoft and Flipkart.',
+          eventDate: DateTime(2027, 8, 18, 14),
         ),
         EventItem(
           id: 'event_3',
@@ -145,6 +147,7 @@ class MockData {
           isBookmarked: false,
           description:
               'Golden hour photo-walk, framing workshop, and manual DSLR lens mastering. Beginners and phone cameras welcome!',
+          eventDate: DateTime(2027, 8, 22, 6),
         ),
         // Ongoing
         EventItem(
@@ -160,6 +163,7 @@ class MockData {
           isBookmarked: false,
           description:
               'Official portal registration for the 2026 TCS recruitment drive. Complete profile verification and upload your resume.',
+          eventDate: DateTime(2027, 8, 14, 23, 59),
         ),
         EventItem(
           id: 'event_5',
@@ -174,6 +178,7 @@ class MockData {
           isBookmarked: false,
           description:
               'Apply for team leadership and volunteer positions for the upcoming college cultural extravaganza Euphoria 2026.',
+          eventDate: DateTime(2027, 8, 20, 23, 59),
         ),
         // Past
         EventItem(
@@ -187,6 +192,7 @@ class MockData {
           registeredCount: 140,
           description:
               'Introduction to specialized departmental electives, laboratory protocols, and academic mentor allocation.',
+          eventDate: DateTime(2026, 7, 21, 10),
         ),
         EventItem(
           id: 'event_7',
@@ -199,6 +205,7 @@ class MockData {
           registeredCount: 95,
           description:
               'Inter-departmental badminton, football, and cricket tournament trials.',
+          eventDate: DateTime(2026, 7, 17, 16),
         ),
       ];
 

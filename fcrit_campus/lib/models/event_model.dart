@@ -42,6 +42,7 @@ class EventItem {
   bool isRegistered;
   final String? ctaText;
   final String description;
+  final DateTime eventDate;
 
   EventItem({
     required this.id,
@@ -56,6 +57,7 @@ class EventItem {
     this.isRegistered = false,
     this.ctaText,
     required this.description,
+    required this.eventDate,
   });
 
   EventItem copyWith({
@@ -71,6 +73,7 @@ class EventItem {
     bool? isRegistered,
     String? ctaText,
     String? description,
+    DateTime? eventDate,
   }) {
     return EventItem(
       id: id ?? this.id,
@@ -85,6 +88,7 @@ class EventItem {
       isRegistered: isRegistered ?? this.isRegistered,
       ctaText: ctaText ?? this.ctaText,
       description: description ?? this.description,
+      eventDate: eventDate ?? this.eventDate,
     );
   }
 }

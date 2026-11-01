@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/event_model.dart';
+import '../services/api_service.dart';
 import '../state/app_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/event_card.dart';
@@ -128,7 +129,7 @@ class EventsScreen extends StatelessWidget {
                             return EventCard(
                               event: event,
                               onBookmarkToggle: () => state.toggleEventBookmark(event.id),
-                              onRegisterToggle: () => state.registerForEvent(event.id),
+                              onRegisterToggle: () => _registerForEvent(context, state, event),
                             );
                           },
                         );
@@ -149,7 +150,7 @@ class EventsScreen extends StatelessWidget {
                           return EventCard(
                             event: event,
                             onBookmarkToggle: () => state.toggleEventBookmark(event.id),
-                            onRegisterToggle: () => state.registerForEvent(event.id),
+                            onRegisterToggle: () => _registerForEvent(context, state, event),
                           );
                         },
                       );
@@ -163,6 +164,27 @@ class EventsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _registerForEvent(BuildContext context, AppState state, EventItem event) async {
+    if (event.isRegistered) return;
+    final result = await ApiService.registerForEvent(
+      eventKey: event.id,
+      title: event.title,
+      location: event.location,
+      eventDate: event.eventDate,
+    );
+    if (!context.mounted) return;
+    if (result['success'] == true) {
+      state.registerForEvent(event.id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registered for ${event.title}. Check your email for confirmation.')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result['message'] as String? ?? 'Could not register for this event.')),
+      );
+    }
   }
 
   Widget _buildSegmentButton(
